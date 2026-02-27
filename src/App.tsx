@@ -1,6 +1,9 @@
 import { RepositorySection } from "./components";
+import { tranformedReport } from "./utils/transform";
 
-function App() {
+export const App = () => {
+  console.log(tranformedReport);
+
   return (
     <>
       <div
@@ -32,6 +35,4 @@ function App() {
       </div>
     </>
   );
-}
-
-export default App;
+};
