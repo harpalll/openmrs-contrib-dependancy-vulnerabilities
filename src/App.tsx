@@ -1,8 +1,23 @@
 import { RepositorySection } from "./components";
+import {
+  getHighestScore,
+  getRepoHighestSeverity,
+  sortDependencies,
+} from "./utils/sorting";
 import { tranformedReport } from "./utils/transform";
 
 export const App = () => {
+  const highestSeverity = getRepoHighestSeverity(tranformedReport.dependencies);
+  let highestScore;
+  tranformedReport.dependencies.map((tr) => {
+    highestScore = getHighestScore(tr.cves);
+  });
+  console.log("highest severity:" + highestSeverity);
+  console.log("highest score:" + highestScore);
   console.log(tranformedReport);
+  const dep = sortDependencies(tranformedReport.dependencies, "severity");
+  console.log("sorted dep:", dep);
+
 
   return (
     <>
