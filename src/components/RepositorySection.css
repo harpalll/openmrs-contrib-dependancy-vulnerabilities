@@ -1,0 +1,66 @@
+.repo-section {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.repo-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  user-select: none;
+}
+
+.repo-section__header:hover {
+  background-color: #f4f4f4;
+}
+
+.repo-section__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.repo-section__name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #161616;
+}
+
+.repo-section__chevron {
+  display: flex;
+  align-items: center;
+  color: #525252;
+}
+
+.repo-section__body {
+  border-top: 1px solid #e0e0e0;
+}
+
+.repo-section__body .cds--data-table-container {
+  padding: 0;
+}
+
+.repo-section__body .cds--data-table thead th {
+  background-color: #e0e0e0;
+}
+
+.repo-section__body .cds--data-table tbody tr.cds--expandable-row td {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.repo-section__body .cds--expandable-row--hover td {
+  background-color: #f4f4f4;
+}
+
+.repo-section__body tr.cds--parent-row:not(.cds--expandable-row) + tr[data-child-row] td {
+  padding: 0;
+}
+
+.repo-section__body tr[data-child-row] td .cve-table-wrapper {
+  padding: 0.5rem 1rem 1rem 2rem;
+}

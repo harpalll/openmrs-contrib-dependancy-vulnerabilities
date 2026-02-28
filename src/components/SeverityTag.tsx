@@ -1,14 +1,17 @@
-import { Tag } from "@carbon/react";
+import type { NormalizedSeverity } from "../types/report.types";
+import "./SeverityTag.css";
 
-type Severity = "critical" | "high" | "medium" | "low";
+const severityLabelMap: Record<NormalizedSeverity, string> = {
+  critical: "Critical",
+  high: "High",
+  medium: "Medium",
+  low: "Low",
+};
 
-const severityColorMap = {
-  critical: "red",
-  high: "magenta",
-  medium: "warm-gray",
-  low: "green",
-} as const;
-
-export const SeverityTag = ({ severity }: { severity: Severity }) => {
-  return <Tag type={severityColorMap[severity]}>{severity}</Tag>;
+export const SeverityTag = ({ severity }: { severity: NormalizedSeverity }) => {
+  return (
+    <span className={`severity-tag severity-tag--${severity}`}>
+      {severityLabelMap[severity]}
+    </span>
+  );
 };

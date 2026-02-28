@@ -1,3 +1,5 @@
 import { RepositorySection } from "./RepositorySection";
+import { SeverityTag } from "./SeverityTag";
+import { CveTable } from "./CveTable";
 
-export { RepositorySection };
+export { RepositorySection, SeverityTag, CveTable };

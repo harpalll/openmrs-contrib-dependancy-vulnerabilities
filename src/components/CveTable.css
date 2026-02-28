@@ -1,0 +1,50 @@
+.cve-table-wrapper {
+  padding: 0 1rem 1rem 2.5rem;
+  overflow-x: auto;
+}
+
+.cve-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.cve-table thead tr {
+  background-color: #e0e0e0;
+}
+
+.cve-table th {
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: #525252;
+  white-space: nowrap;
+}
+
+.cve-table td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+  color: #161616;
+}
+
+.cve-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.cve-link {
+  color: #0f62fe;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cve-link:hover {
+  text-decoration: underline;
+}
+
+.cve-description {
+  max-width: 360px;
+  line-height: 1.5;
+  word-break: break-word;
+}

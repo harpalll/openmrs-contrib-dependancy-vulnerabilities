@@ -80,16 +80,24 @@ export interface Cve {
   score: number;
   description: string;
   exploit: boolean;
+  url?: string;
+  affectedVersions?: string;
+  fixedIn?: string;
+  cwe?: string;
 }
 
 export interface Dependency {
   name: string;
   version: string;
+  severity: NormalizedSeverity;
   cves: Cve[];
+  fixVersion?: string;
+  hasExploit: boolean;
 }
 
 export interface RepositoryReport {
   name: string;
-  schema?: string;
+  severity: NormalizedSeverity;
+  highestScore: number;
   dependencies: Dependency[];
 }

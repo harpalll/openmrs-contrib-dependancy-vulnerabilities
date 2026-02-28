@@ -1,22 +1,25 @@
-import type { Cve } from "../types/report.types";
+import type { NormalizedSeverity } from "../types/report.types";
 
 export const normalizeSeverity = (
   severity: string,
-): "critical" | "high" | "medium" | "low" => {
-  return severity.toLowerCase() as "critical" | "high" | "medium" | "low";
+): NormalizedSeverity => {
+  const lower = severity.toLowerCase();
+  if (lower === "critical" || lower === "high" || lower === "medium" || lower === "low") {
+    return lower;
+  }
+  return "low";
 };
 
-export function getHighestSeverity(cves: Cve[]) {
-  const severityRank = {
-    critical: 4,
-    high: 3,
-    medium: 2,
-    low: 1,
-  };
+export const severityRank: Record<NormalizedSeverity, number> = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+};
 
-  return cves.reduce((highest, current) => {
-    return severityRank[current.severity] > severityRank[highest]
-      ? current.severity
-      : highest;
-  }, cves[0]?.severity ?? "low");
-}
+export const severityScoreMap: Record<NormalizedSeverity, number> = {
+  critical: 9.0,
+  high: 7.0,
+  medium: 5.0,
+  low: 3.0,
+};

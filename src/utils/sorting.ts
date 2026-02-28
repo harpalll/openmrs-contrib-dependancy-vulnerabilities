@@ -2,60 +2,52 @@ import type {
   Cve,
   Dependency,
   NormalizedSeverity,
+  RepositoryReport,
 } from "../types/report.types";
+import { severityRank } from "./severity";
 
-export const severityScoreMap: Record<NormalizedSeverity, number> = {
-  critical: 9,
-  high: 7,
-  medium: 5,
-  low: 3,
-};
-
-export const severityRank: Record<NormalizedSeverity, number> = {
-  critical: 4,
-  high: 3,
-  medium: 2,
-  low: 1,
+export const sortCves = (cves: Cve[]): Cve[] => {
+  return [...cves].sort((a, b) => b.score - a.score);
 };
 
 export const getHighestSeverity = (cves: Cve[]): NormalizedSeverity => {
-  return cves.reduce(
+  if (cves.length === 0) return "low";
+  return cves.reduce<NormalizedSeverity>(
     (highest, current) =>
       severityRank[current.severity] > severityRank[highest]
         ? current.severity
         : highest,
-    cves[0]?.severity ?? "low",
+    cves[0].severity,
   );
 };
 
-export const getHighestScore = (cves: Cve[]) => {
-  return Math.max(...cves.map((c) => c.score), 0);
+export const getHighestScore = (cves: Cve[]): number => {
+  if (cves.length === 0) return 0;
+  return Math.max(...cves.map((c) => c.score));
 };
 
-export const getRepoHighestSeverity = (deps: Dependency[]) => {
-  const allCves = deps.flatMap((d) => d.cves);
-  return getHighestSeverity(allCves);
-};
-
-export type DependencySort = "severity" | "score" | "name";
-
-export const sortDependencies = (
-  deps: Dependency[],
-  sortBy: DependencySort,
-): Dependency[] => {
+export const sortDependencies = (deps: Dependency[]): Dependency[] => {
   return [...deps].sort((a, b) => {
-    if (sortBy === "severity") {
-      return (
-        severityRank[getHighestSeverity(b.cves)] -
-        severityRank[getHighestSeverity(a.cves)]
-      );
-    }
+    const sevDiff = severityRank[b.severity] - severityRank[a.severity];
+    if (sevDiff !== 0) return sevDiff;
 
-    if (sortBy === "score") {
-      return getHighestScore(b.cves) - getHighestScore(a.cves);
-    }
+    const scoreA = getHighestScore(a.cves);
+    const scoreB = getHighestScore(b.cves);
+    if (scoreB !== scoreA) return scoreB - scoreA;
 
     return a.name.localeCompare(b.name);
   });
 };
 
+export const sortRepositories = (
+  repos: RepositoryReport[],
+): RepositoryReport[] => {
+  return [...repos].sort((a, b) => {
+    const sevDiff = severityRank[b.severity] - severityRank[a.severity];
+    if (sevDiff !== 0) return sevDiff;
+
+    if (b.highestScore !== a.highestScore) return b.highestScore - a.highestScore;
+
+    return a.name.localeCompare(b.name);
+  });
+};
