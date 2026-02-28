@@ -38,7 +38,9 @@ export const transformReport = (
 
     const normalized = normalizeSeverity(vuln.severity);
 
-    const nvdUrl = vuln.identifiers?.find((id) => id.type === "NVD")?.url;
+    const nvdIdentifier = vuln.identifiers?.find((id) => id.type === "NVD");
+    const npmIdentifier = vuln.identifiers?.find((id) => id.type === "NPM");
+    const cveUrl = nvdIdentifier?.url ?? npmIdentifier?.url;
 
     const cve: Cve = {
       id: vuln.id,
@@ -46,7 +48,7 @@ export const transformReport = (
       score: severityScoreMap[normalized],
       description: vuln.description,
       exploit: hasExploit,
-      url: nvdUrl,
+      url: cveUrl,
     };
 
     const dep = dependencyMap.get(key)!;
