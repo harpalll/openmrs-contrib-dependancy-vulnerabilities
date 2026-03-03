@@ -42,7 +42,11 @@ export const CveTable = ({ cves }: Props) => {
                 <SeverityTag severity={cve.severity} />
               </td>
               <td>{cve.score}/10</td>
-              <td className="cve-description">{cve.description}</td>
+              <td>
+                <div className="cve-description" title={cve.description}>
+                  {cve.description}
+                </div>
+              </td>
               <td>{cve.affectedVersions ?? "-"}</td>
               <td>{cve.fixedIn ?? "-"}</td>
               <td>{cve.cwe ?? "-"}</td>
