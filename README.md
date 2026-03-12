@@ -1,85 +1,81 @@
-# OpenMRS Dependency Vulnerability Dashboard
+# OpenMRS Dependency Vulnerability Report
 
-A comprehensive dashboard for visualizing and analyzing security vulnerabilities in OpenMRS repositories.
+A summary of known security vulnerabilities detected across OpenMRS modules by automated dependency scanning. Each module lists its vulnerable dependencies, severity levels, and recommended fix versions to help maintainers prioritize upgrades.
 
-## Features
+## Components Used for displaying data
 
-- **Dashboard View**: Overview of all repositories with their overall severity and highest vulnerability scores.
-- **Repository Details**: Expandable sections for each repository showing detailed vulnerability information.
-- **Vulnerability Tables**: Interactive tables for browsing vulnerabilities with sorting and filtering.
-- **Severity Tracking**: Visual severity indicators (Critical, High, Medium, Low).
-- **Exploit Detection**: Highlights vulnerabilities that have known exploits.
-- **Data Sources**: Integrates vulnerability data from multiple sources.
+Carbon Web Components (loaded from CDN)
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd openmrs-contrib-dependancy-vulnerabilities
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-### Usage
-
-Start the development server:
-
-```bash
-npm run dev
+```html
+<script
+  type="module"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v2.49.0/accordion.min.js"
+></script>
+<script
+  type="module"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v2.49.0/data-table.min.js"
+></script>
+<script
+  type="module"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v2.49.0/tag.min.js"
+></script>
 ```
 
-Open [http://localhost:5173](http://localhost:5173) to view the dashboard in your browser.
+Used components:
+
+- `cds-accordion`
+- `cds-table`
+- `cds-tag`
+
+---
 
 ## Project Structure
 
 ```
-src/
-├── components/        # Reusable UI components
-│   ├── RepositorySection.tsx  # Repository cards with expandable tables
-│   ├── CveTable.tsx           # Vulnerability tables
-│   └── SeverityTag.tsx        # Severity indicators
-├── types/             # TypeScript type definitions
-│   └── report.types.ts
-├── utils/             # Utility functions
-│   ├── transform.ts           # Data transformation logic
-│   ├── severity.ts            # Severity normalization
-│   └── sorting.ts             # Sorting utilities
-└── App.tsx            # Main application component
+data/
+ ├─ billing.json
+ ├─ idgen.json
+ └─ openmrs-core.json
+
+js/
+ ├─ main.js : controls the flow
+ ├─ fetchReports.js : fetches the data
+ ├─ parseReports.js : parses the data
+ ├─ table.js
+ └─ helpers.js
 ```
 
-## Data
+### parseReports.js
 
-Vulnerability data is stored in the `data/` directory as JSON files:
+Extracts relevant fields from the dependency check reports.
 
-- `openmrs-core.json` - Vulnerabilities in OpenMRS Core
-- `openmrs-module-billing.json` - Vulnerabilities in Billing Module
-- `openmrs-module-idgen.json` - Vulnerabilities in IDGen Module
+Fallback value to "-" if missing:
 
-## Development
+#### Dependency Table Fields
 
-### Adding New Repositories
+| Field       | Source                                                             |
+| ----------- | ------------------------------------------------------------------ |
+| dependency  | `report.dependencies.packages[0].id` (name extract using regex)    |
+| version     | `report.dependencies.packages[0].id` (version extract using regex) |
+| severity    | highest severity among vulnerabilities                             |
+| cves        | `vulnerabilities.length`                                           |
+| exploit     | `references[].name` which contains `"EXPLOIT"`                     |
+| fix version | `versionEndExcluding`                                              |
 
-1. Add your vulnerability data JSON file to the `data/` directory
-2. Update `src/utils/transform.ts` to include the new data in `allReports` array
-3. Run `npm run dev` to see the changes
+---
 
-### Component Development
+#### CVE Table Fields (for severity two different version are available)
 
-- Use Carbon Design System components for consistent UI
-- Keep components focused and reusable
-- Follow the existing styling patterns in `src/components/*.css`
+| Field            | Source                                            |
+| ---------------- | ------------------------------------------------- |
+| cve_id           | `vulnerability.name`                              |
+| severity         | `cvssv3.baseSeverity` or `vulnerability.severity` |
+| score            | `cvssv3.baseScore` or `cvssv2.score`              |
+| description      | `vulnerability.description`                       |
+| affected version | `vulnerableSoftware.software.versionEndExcluding` |
+| fixed in         | `versionEndExcluding` or `versionEndIncluding`    |
+| cwe              | `vulnerability.cwes`                              |
 
-## License
+## run using
 
-[MIT License](LICENSE)
+npx -y serve . -l 3000
